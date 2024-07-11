@@ -8,11 +8,11 @@ const fs = require('fs').promises;
 const app = express();
 var cors = require('cors');
 app.use(cors(
-  {
-    origin : ["https://dspmdm-test.netlify.app/"],
-    methods : ["POST","GET","DELETE","PUT"],
-    credentials : true
-  }
+  // {
+  //   origin : ["https://dspmdm-test.netlify.app/"],
+  //   methods : ["POST","GET","DELETE","PUT"],
+  //   credentials : true
+  // }
 ));
 const PORT = 3000;
 
