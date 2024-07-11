@@ -1,0 +1,14 @@
+{
+  "type": "service_account",
+  "project_id": "dsp-emm-solution",
+  "private_key_id": "7c669a1e61e58bf30be44667553741dddad802d1",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCr+PrMli0ujQgl\nDhbbY7M1ZgdRXc7liev2D9VYVdUubltgCLh54GXB10pWGLZ+8fXsDwCCDy/lKkST\n6VISldx3mIu+5uIzqky1OMgjfMpmPn8FWw41xW7Eysm8DlTf0CcPA8etm20oZm+c\niYuUfxrBMR+Kvv/FLtNVfDG1Njk6S2qMsafpetCUx15HZVCGDGBgCdb8sQ9hPCL8\n41iImbbODbl6k9SZ9VINJn4PkrTv5doY63kasNtZexROQx5NIVZdJyMgL6tE62qf\nN/STRD0u52uohegRZo6rKevFZFoExM7Yd410yUtv2ev5TymSLH0Te+FQdpmc+45u\nUUHQcr63AgMBAAECggEADISeqPbDijBs59mbM1QSDvCC1trnvRCpkus7Ied5kZwp\n3Zc06nY5of8MY7D/08TEHG9JH66AU4Oco1GoDj9HYZNClN5Ul+MtG0HrW53xU7j3\n4QlsQuDAu+VxAtXeOr55oV+qkMoQC5FNTY07kk8gQPDU9XIKxy0t5/qW2bR9PO9y\nmw2MTX0fEPtlSA7oWZKMCMrh5uEW+XqW/ML5Nms4VDW3Xb7dP/5pCO/BJxr9rSgK\nI7ENAGNDSDdL/2yAuoDHiGl4sShSzHt4sB/w5BXaYgvuyfn8JEoQ/CG/S57zKTLu\nC9TtYB/nL9JdGXqDbc8yCVoL0tAO/Up7Vne1DEpUXQKBgQDv+FvhwlTyd9ek0Hea\nlOOdak8OcETjVesAlZhOiFRElFjTHG+/WttNXcCNS7td3Bur5+rCvqJCA0rcXCrO\n6iDzt4krCz3AEG6jfSGEiwSSCQgTvt4QTvMXnW1rSLsKfUBKdAiz5elMmbctAhQt\ntRdbLetveL2MFojI+i7K1pOuTQKBgQC3ddG+XqqglSu0qghVIoINIYXxDNbBQDmv\ndwucUcMqZqyGO3ZSbhoY5cUwEXUKffo/KdQboA+VJu8IfuFS9HtaPQcCUxYJUgqS\n1VDLoj+yc5Yn3Lwl4N3rAlIJw6vfEf2Rax2Q3lyqQFUWEcmgG/E2lNLX6uMOCwZP\nqnB2mb2LEwKBgQC+//wKBgZc81xVl4QLKsS8b3g7Msrx81nYHjmbEFGaQEUuyyx6\nr1NsEdoH3KZmf6Iawr4NgXRefIZiPI3qIVpXAdeQxiLBM5MMV7WM7KWXos6mAL55\nVo2QV0JXKQ2OvMCmQhMHNVDrIlI05bmv47qSXUtOb1jXHryC0vbZhc8H5QKBgAw6\n9YWcaAGWkDhWEYIjb8oSTwyXz4VIk8/nvsVoCfu8pom4UxYBswmv36ppr4TIizNE\nxZgl3oQR+WN2meze0Y5dfSchhNmQN5Y8VEuPAHIUFJGJvJ1F1WWCXRe7jKytVVsp\naeoreL/80+9JtkhPNJBv8XJlfUeFYqFS+nZdn24zAoGBAOpB3z9AJzmdOqVywgjQ\n358Rb8+6vUqalmFjOZUtU7ScdkQNQ8biA/tlFf7x3of3a6T6kXVpSzi3KLYO40F7\nxMcuvMlOTpax3RgQC3YXbx9CKo0QgcHWTTa8LOKwliJOIws4NV2Ml6KYLfp/htHx\nZk4e4h3ce34lHzVjaLrjliZ1\n-----END PRIVATE KEY-----\n",
+  "client_email": "dsp-mdm@dsp-emm-solution.iam.gserviceaccount.com",
+  "client_id": "115887863258518301477",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dsp-mdm%40dsp-emm-solution.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com",
+  "redirect_uris": ["http://localhost:3000/oauth2callback"]
+}
