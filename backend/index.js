@@ -3,19 +3,19 @@ const { google } = require("googleapis");
 const path = require("path");
 const QRCode = require("qrcode");
 const fs = require('fs').promises;
-const CallbackURL = import.meta.env.CALLBACK_URL
 
 
 const app = express();
 var cors = require('cors');
 app.use(cors());
-const port = 3000;
+const PORT = 3000;
 
 app.use(express.json());
 
 const KEY_FILE = path.join(__dirname, "dsp-emm-solution-7c669a1e61e5.json");
 const SCOPES = ["https://www.googleapis.com/auth/androidmanagement"];
 const PROJECT_ID = "dsp-emm-solution";
+const CALLBACK_URL = "https://example.com/callback";
 
 async function getAuthClient() {
   return new google.auth.GoogleAuth({
@@ -52,7 +52,7 @@ app.post('/create-enterprise', async (req, res) => {
     const signupUrlRes = await androidmanagement.signupUrls.create({
       projectId: PROJECT_ID,
       requestBody: {
-        callbackUrl: "https://example.com/callback",
+        callbackUrl:CALLBACK_URL,
       },
     });
 
@@ -109,7 +109,7 @@ app.post('/signup-url', async (req, res) => {
     const signupUrlRes = await androidmanagement.signupUrls.create({
       projectId: PROJECT_ID,
       requestBody: {
-        callbackUrl: "https://example.com/callback",
+        callbackUrl: CALLBACK_URL,
       },
     });
     res.json(signupUrlRes.data);
@@ -140,21 +140,6 @@ app.post('/enrollment-token', async (req, res) => {
     });
   } catch (error) {
     console.error('Error generating enrollment token:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.get('/qr-code/:enterpriseName', async (req, res) => {
-  try {
-    const { enterpriseName } = req.params;
-    const qrCodePath = path.join(__dirname, `qr_codes/${enterpriseName}_qr.png`);
-    
-    if (await fs.access(qrCodePath).then(() => true).catch(() => false)) {
-      res.sendFile(qrCodePath);
-    } else {
-      res.status(404).json({ error: 'QR code not found for this enterprise' });
-    }
-  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
@@ -325,23 +310,7 @@ async function deleteDevice(fullDeviceName) {
   }
 }
 
-async function getPolicyIfExists(enterpriseName) {
-  const androidmanagement = await getAndroidManagementClient();
 
-  try {
-    const res = await androidmanagement.enterprises.policies.get({
-      name: `${enterpriseName}/policies/masterPolicy`,
-    });
-    return res.data;
-  } catch (error) {
-    if (error.code === 404) {
-      console.log('Policy does not exist');
-      return null;
-    }
-    console.error('Error checking policy:', error);
-    throw error;
-  }
-}
 
 async function createOrUpdateAppPolicy(fullEnterpriseName, allowedApps) {
   const androidmanagement = await getAndroidManagementClient();
@@ -389,6 +358,7 @@ async function applyPolicyToDevice(fullDeviceName, policyName) {
   }
 }
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+
+
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@googleapis/androidmanagement": "^17.3.0",
     "axios": "^1.7.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "firebase": "^10.12.2",
+    "google-auth-library": "^9.11.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
