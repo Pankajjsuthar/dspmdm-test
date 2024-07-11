@@ -21,7 +21,7 @@ app.use(express.json());
 const KEY_FILE = path.join(__dirname, "dsp-emm-solution-7c669a1e61e5.json");
 const SCOPES = ["https://www.googleapis.com/auth/androidmanagement"];
 const PROJECT_ID = "dsp-emm-solution";
-const CALLBACK_URL = "https://dspmdm-test.netlify.app/login";
+const CALLBACK_URL = "https://dspmdm-test.netlify.app/signup";
 
 async function getAuthClient() {
   return new google.auth.GoogleAuth({
@@ -141,7 +141,7 @@ app.post('/enrollment-token', async (req, res) => {
 
     res.json({
       enrollmentToken,
-      qrCodePath,
+      stringifiedData,
       message: 'Enrollment token generated with 10-year validity'
     });
   } catch (error) {

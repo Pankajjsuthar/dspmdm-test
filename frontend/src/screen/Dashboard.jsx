@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
+// import { QRCODE } from 'qrcode';
 const BASE_URL = import.meta.env.BASE_URL
 
 function formatDate(dateString) {
@@ -17,6 +18,42 @@ function formatDate(dateString) {
   };
   return new Date(dateString).toLocaleString("en-US", options);
 }
+
+// const downloadQR = () => {
+//   const qrCodeData = {"android.app.extra.PROVISIONING_DEVICE_ADMIN_COMPONENT_NAME":"com.google.android.apps.work.clouddpc/.receivers.CloudDeviceAdminReceiver","android.app.extra.PROVISIONING_DEVICE_ADMIN_SIGNATURE_CHECKSUM":"I5YvS0O5hXY46mb01BlRjq4oJJGs2kuUcHvVkAPEXlg","android.app.extra.PROVISIONING_DEVICE_ADMIN_PACKAGE_DOWNLOAD_LOCATION":"https://play.google.com/managed/downloadManagingApp?identifier=setup","android.app.extra.PROVISIONING_ROLE_HOLDER_SIGNATURE_CHECKSUM":"I5YvS0O5hXY46mb01BlRjq4oJJGs2kuUcHvVkAPEXlg","android.app.extra.PROVISIONING_ROLE_HOLDER_PACKAGE_DOWNLOAD_LOCATION":"https://play.google.com/managed/downloadManagingApp?identifier=setup","android.app.extra.PROVISIONING_ADMIN_EXTRAS_BUNDLE":{"com.google.android.apps.work.clouddpc.EXTRA_ENROLLMENT_TOKEN":"UIFSDDPUYMJACFWJSQYNBZEW"}};
+
+//   // Create a temporary div to hold the QR code
+//   const qrContainer = document.createElement('div');
+//   document.body.appendChild(qrContainer);
+
+//   // Generate QR code
+//   new QRCode(qrContainer, {
+//     text: JSON.stringify(qrCodeData),
+//     width: 256,
+//     height: 256
+//   });
+
+//   // Get the canvas element
+//   const canvas = qrContainer.querySelector('canvas');
+
+//   // Convert canvas to blob
+//   canvas.toBlob((blob) => {
+//     // Create a download link
+//     const url = URL.createObjectURL(blob);
+//     const link = document.createElement('a');
+//     link.href = url;
+//     link.download = 'qrcode.png';
+
+//     // Trigger download
+//     document.body.appendChild(link);
+//     link.click();
+
+//     // Clean up
+//     document.body.removeChild(link);
+//     URL.revokeObjectURL(url);
+//     document.body.removeChild(qrContainer);
+//   });
+// };
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -60,6 +97,7 @@ function Dashboard() {
       // Handle error (e.g., show error message to user)
     }
   };
+
   useEffect(() => {
     fetchDetails();
   }, []);

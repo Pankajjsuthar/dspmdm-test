@@ -10,61 +10,83 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [businessName, setBusinessName] = useState("");
-  // const [error, setError] = useState(null);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [registrationUrl, setRegistrationUrl] = useState("");
-  const [signupURL, setSignupURL] = useState("");
+  // const [registrationUrl, setRegistrationUrl] = useState("");
+  // const [signupURL, setSignupURL] = useState("");
   const navigate = useNavigate();
 
-  // const defaultApps = [
-  //   "com.amazon.flex.rabbit",
-  //   "com.adpmobile.android",
-  //   "com.edriving.mentor.amazon",
-  //   "com.google.android.apps.maps",
-  //   "com.waze",
-  // ];
+  const defaultApps = [
+    "com.amazon.flex.rabbit",
+    "com.adpmobile.android",
+    "com.edriving.mentor.amazon",
+    "com.google.android.apps.maps",
+    "com.waze",
+  ];
 
-  useEffect(() => {
-    const fetchRegistrationUrl = async () => {
-      try {
-        const response = await axios.post(`${BASE_URL}/signup-url`);
-        setRegistrationUrl(response.data.url);
-        setSignupURL(response.data.name);
-      } catch (error) {
-        console.error("Error fetching registration URL:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchRegistrationUrl = async () => {
+  //     try {
+  //       const response = await axios.post(`${BASE_URL}/signup-url`);
+  //       setRegistrationUrl(response.data.url);
+  //       setSignupURL(response.data.name);
+  //     } catch (error) {
+  //       console.error("Error fetching registration URL:", error);
+  //     }
+  //   };
   
-    fetchRegistrationUrl();
-  }, []);
+  //   fetchRegistrationUrl();
+  // }, []);
 
   const handleSignup = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(
+
+      const response = axios.get("http://localhost:3000/enterprises");
+
+      console.log(response);
+      const matchingEnterprise = response.data.enterprises.find(
+        (enterprise) =>
+          enterprise.enterpriseDisplayName.toLowerCase() ===
+          businessName.toLowerCase()
+      );
+
+      const enterpriseId = matchingEnterprise.name.split("/")[1];
+
+      // Create default policy
+      axios.post("http://localhost:3000/policy", {
+        enterpriseId,
+        defaultApps,
+      });
+
+      const enrolledToken = axios.post(
+        "http://localhost:3000/enrollment-token",
+        { 
+          enterpriseId,
+          policyName : "masterPolicy"
+         }
+      );
+
+      const userCredential = createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
       const user = userCredential.user;
-  
-      await setDoc(doc(db, "users", user.uid), {
+
+      setDoc(doc(db, "users", user.uid), {
         email: user.email,
         enterpriseName: businessName,
-        signupUrlName: signupURL,
-        enterpriseId: "",
-        enrolledToken: "",
-        QRcode: "",
+        enterpriseId: enterpriseId,
+        enrolledToken: enrolledToken.data.enrollmentToken.value,
+        QRcode: enrolledToken.data.qrCodePath,
         createdAt: new Date(),
       });
-      if (registrationUrl) {
-        window.location.href = registrationUrl;
-      } else {
-        throw new Error("Registration URL is not available");
-      }
+
+      navigate("/login");
     } catch (error) {
-      console.error("Signup error:", error);
+      setError("Error while Sign-Up");
     } finally {
       setLoading(false);
     }
@@ -157,6 +179,7 @@ function Signup() {
                 ))}
               </div>
             </div> */}
+              {error && <p className="text-red-500 mb-4">{error}</p>}
             <button
               type="submit"
               className="w-full bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition duration-300"
