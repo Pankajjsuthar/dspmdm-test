@@ -15,7 +15,7 @@ app.use(express.json());
 const KEY_FILE = path.join(__dirname, "dsp-emm-solution-7c669a1e61e5.json");
 const SCOPES = ["https://www.googleapis.com/auth/androidmanagement"];
 const PROJECT_ID = "dsp-emm-solution";
-const CALLBACK_URL = "https://example.com/callback";
+const CALLBACK_URL = "https://dspmdm-test.netlify.app/login";
 
 async function getAuthClient() {
   return new google.auth.GoogleAuth({
