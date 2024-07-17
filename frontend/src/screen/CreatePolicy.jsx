@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-const BASE_URL = import.meta.env.BASE_URL
+const BASE_URL = "http://localhost:3000"
 
 function PolicyCreator() {
   const [enterpriseId, setEnterpriseId] = useState("");
@@ -64,7 +64,7 @@ function PolicyCreator() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
       <h2 className="text-4xl font-bold text-center mb-16 text-gray-900">
-        Create and Apply Policy
+        Update Policy
       </h2>
       <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-8">
         <form onSubmit={handleSubmit}>

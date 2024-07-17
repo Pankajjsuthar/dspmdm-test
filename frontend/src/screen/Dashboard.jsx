@@ -3,8 +3,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
-// import { QRCODE } from 'qrcode';
-const BASE_URL = import.meta.env.BASE_URL
+import QRCode from "qrcode"; // Import the qrcode library
+
+const BASE_URL = "http://localhost:3000";
 
 function formatDate(dateString) {
   const options = {
@@ -18,42 +19,6 @@ function formatDate(dateString) {
   };
   return new Date(dateString).toLocaleString("en-US", options);
 }
-
-// const downloadQR = () => {
-//   const qrCodeData = {"android.app.extra.PROVISIONING_DEVICE_ADMIN_COMPONENT_NAME":"com.google.android.apps.work.clouddpc/.receivers.CloudDeviceAdminReceiver","android.app.extra.PROVISIONING_DEVICE_ADMIN_SIGNATURE_CHECKSUM":"I5YvS0O5hXY46mb01BlRjq4oJJGs2kuUcHvVkAPEXlg","android.app.extra.PROVISIONING_DEVICE_ADMIN_PACKAGE_DOWNLOAD_LOCATION":"https://play.google.com/managed/downloadManagingApp?identifier=setup","android.app.extra.PROVISIONING_ROLE_HOLDER_SIGNATURE_CHECKSUM":"I5YvS0O5hXY46mb01BlRjq4oJJGs2kuUcHvVkAPEXlg","android.app.extra.PROVISIONING_ROLE_HOLDER_PACKAGE_DOWNLOAD_LOCATION":"https://play.google.com/managed/downloadManagingApp?identifier=setup","android.app.extra.PROVISIONING_ADMIN_EXTRAS_BUNDLE":{"com.google.android.apps.work.clouddpc.EXTRA_ENROLLMENT_TOKEN":"UIFSDDPUYMJACFWJSQYNBZEW"}};
-
-//   // Create a temporary div to hold the QR code
-//   const qrContainer = document.createElement('div');
-//   document.body.appendChild(qrContainer);
-
-//   // Generate QR code
-//   new QRCode(qrContainer, {
-//     text: JSON.stringify(qrCodeData),
-//     width: 256,
-//     height: 256
-//   });
-
-//   // Get the canvas element
-//   const canvas = qrContainer.querySelector('canvas');
-
-//   // Convert canvas to blob
-//   canvas.toBlob((blob) => {
-//     // Create a download link
-//     const url = URL.createObjectURL(blob);
-//     const link = document.createElement('a');
-//     link.href = url;
-//     link.download = 'qrcode.png';
-
-//     // Trigger download
-//     document.body.appendChild(link);
-//     link.click();
-
-//     // Clean up
-//     document.body.removeChild(link);
-//     URL.revokeObjectURL(url);
-//     document.body.removeChild(qrContainer);
-//   });
-// };
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -72,26 +37,26 @@ function Dashboard() {
       navigate("/login");
       return;
     }
-  
+
     try {
       // Fetch user data from Firestore
       const userDocRef = doc(db, "users", user.uid);
       const userDocSnap = await getDoc(userDocRef);
-  
+
       if (!userDocSnap.exists()) {
         throw new Error("User document not found");
       }
-  
+
       const userData = userDocSnap.data();
       setEnterpriseName(userData.enterpriseName);
       setEnrolledToken(userData.enrolledToken);
       setEnterpriseId(userData.enterpriseId);
       setQrCodePath(userData.QRcode);
-  
+
       // Fetch devices using the enterpriseId from Firestore
       const devicesResponse = await axios.get(`${BASE_URL}/devices/${userData.enterpriseId}`);
       setDevices(devicesResponse.data);
-  
+
     } catch (error) {
       console.error("Error fetching details:", error);
       // Handle error (e.g., show error message to user)
@@ -110,18 +75,28 @@ function Dashboard() {
     fetchDetails(); // Refresh the device list after removal
   };
 
-  const downloadQR = () => {
-    if (qrCodePath) {
-      const link = document.createElement("a");
-      link.href = `${BASE_URL}/download-qr?path=${encodeURIComponent(
-        qrCodePath
-      )}`;
-      link.download = "qr_code.png";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } else {
-      alert("QR Code not available");
+  const downloadQR = async () => {
+    try {
+      const qrCodeData = qrCodePath;
+      const canvas = document.createElement('canvas');
+      await QRCode.toCanvas(canvas, JSON.stringify(qrCodeData), { width: 256 });
+
+      canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'qrcode.png';
+
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+
+        // Clean up
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      });
+    } catch (error) {
+      console.error("Error generating QR code:", error);
     }
   };
 
@@ -179,7 +154,7 @@ function Dashboard() {
               </button>
               <button
                 onClick={() => {
-                  navigate("/create_policy");
+                  navigate("/update_policy");
                 }} // Empty onClick handler for now
                 className="bg-green-600 text-white px-3 py-1 md:px-4 md:py-2 text-sm md:text-base rounded-full hover:bg-green-700 transition duration-300"
               >
@@ -205,7 +180,7 @@ function Dashboard() {
                 </tr>
               </thead>
               <tbody>
-                {devices.map((device) => (
+                {devices && devices.map((device) => (
                   <tr key={device.id} className="border-b">
                     <td className="px-4 py-2">
                       {device.name ? device.name.split("/").pop() : "N/A"}
@@ -215,18 +190,6 @@ function Dashboard() {
                         "-" +
                         device.hardwareInfo?.hardware || "N/A"}
                     </td>
-                    {/* <td className="px-4 py-2">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs ${
-                          device.status === "Active"
-                            ? "bg-green-200 text-green-800"
-                            : "bg-red-200 text-red-800"
-                        }`}
-                      >
-                        {device.status}
-                      </span>
-                    </td> */}
-
                     <td className="px-4 py-2">{device.appliedPolicyVersion}</td>
                     <td className="px-4 py-2">
                       {formatDate(device.enrollmentTime)}
@@ -248,7 +211,6 @@ function Dashboard() {
           </div>
         </div>
       </main>
-      
     </div>
   );
 }

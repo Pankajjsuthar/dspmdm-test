@@ -16,7 +16,7 @@ function Signup() {
   // const [signupURL, setSignupURL] = useState("");
   const navigate = useNavigate();
 
-  const defaultApps = [
+  const allowedApps = [
     "com.amazon.flex.rabbit",
     "com.adpmobile.android",
     "com.edriving.mentor.amazon",
@@ -43,7 +43,7 @@ function Signup() {
     setLoading(true);
     try {
 
-      const response = axios.get("http://localhost:3000/enterprises");
+      const response = await axios.get("http://localhost:3000/enterprises");
 
       console.log(response);
       const matchingEnterprise = response.data.enterprises.find(
@@ -55,12 +55,12 @@ function Signup() {
       const enterpriseId = matchingEnterprise.name.split("/")[1];
 
       // Create default policy
-      axios.post("http://localhost:3000/policy", {
+      await axios.post("http://localhost:3000/policy", {
         enterpriseId,
-        defaultApps,
+        allowedApps,
       });
 
-      const enrolledToken = axios.post(
+      const enrolledToken = await axios.post(
         "http://localhost:3000/enrollment-token",
         { 
           enterpriseId,
@@ -68,24 +68,28 @@ function Signup() {
          }
       );
 
-      const userCredential = createUserWithEmailAndPassword(
+      const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
       const user = userCredential.user;
+      
+     
+      console.log(enrolledToken);
 
       setDoc(doc(db, "users", user.uid), {
         email: user.email,
         enterpriseName: businessName,
         enterpriseId: enterpriseId,
         enrolledToken: enrolledToken.data.enrollmentToken.value,
-        QRcode: enrolledToken.data.qrCodePath,
+        QRcode: enrolledToken.data.enrollmentToken.qrCode,
         createdAt: new Date(),
       });
 
       navigate("/login");
     } catch (error) {
+      console.log(error);
       setError("Error while Sign-Up");
     } finally {
       setLoading(false);
