@@ -61,14 +61,7 @@ function EnterpriseOnboarding() {
       <header className="bg-white shadow-md">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <div className="text-2xl font-bold text-blue-600">DSP - EMM Solutions</div>
-          <button
-            onClick={() => {
-              navigate("/");
-            }}
-            className="bg-500 text-white px-4 py-2 rounded-full hover:bg-green-700 transition duration-300"
-          >
-            Home
-          </button>
+          
           <nav>
             <ul className="flex space-x-6">
               

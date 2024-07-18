@@ -13,6 +13,9 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const auth = getAuth();
+  const db = getFirestore();
+
   // const enterpriseResponse = await axios.post(
   //     "http://localhost:3000/enterprise-details",
   //     {
@@ -21,36 +24,76 @@ function Login() {
   //     }
   //   );
 
+  // Extract enterpriseToken from URL
+
+  // useEffect(() => {
+  //   if (enterpriseToken) {
+  //     setEnterpriseRegistered(true);
+  //   }
+  // }, [enterpriseToken]);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      // Authenticate user
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      // Get enterpriseToken from URL
       const urlParams = new URLSearchParams(window.location.search);
-      const enterprise_token = urlParams.get("enterpriseToken");
+      const enterpriseToken = urlParams.get("enterpriseToken");
 
-      if (enterprise_token) {
-        setDoc(doc(db, "users", user.uid), {
-          enterpriseToken: enterprise_token,
-        });
-      }
+      // Fetch user data
+      const userDocRef = doc(db, "users", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
 
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
         console.log("User data:", userData);
+
+        // Update enterpriseToken if present in URL
+        if (enterpriseToken) {
+          await setDoc(userDocRef, { enterpriseToken }, { merge: true });
+          userData.enterpriseToken = enterpriseToken;
+        }
+
+        // Check if enterpriseId exists
+        if (userData.enterpriseId) {
+          // Navigate to dashboard if enterpriseId exists
+          navigate("/dashboard");
+        } else if (userData.signupName && userData.enterpriseToken) {
+          // If enterpriseId is blank, use signupUrl and enterpriseToken
+          try {
+            const enterpriseResponse = await axios.post(
+              `${BASE_URL}/enterprise-details`,
+              {
+                enterprise_token: userData.enterpriseToken,
+                signupUrlName: userData.signupName,
+              }
+            );
+            const enterpriseId = enterpriseResponse.name.split("/")[1];
+            // Update user document with enterprise details
+            await setDoc(userDocRef, {
+              enterpriseId: enterpriseId,
+              // Add any other relevant data from the response
+            }, { merge: true });
+
+            // Navigate to dashboard after updating enterprise details
+            navigate("/dashboard");
+          } catch (error) {
+            console.error("Error fetching enterprise details:", error);
+            setError("Failed to fetch enterprise details. Please try again.");
+          }
+        } else {
+          setError("Enterprise registration incomplete. Please contact support.");
+        }
       } else {
         console.log("No user data found");
+        setError("User data not found. Please sign up.");
       }
-
-      navigate("/dashboard");
     } catch (error) {
+      console.error("Login error:", error);
       setError(error.message);
     } finally {
       setLoading(false);
