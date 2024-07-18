@@ -164,9 +164,70 @@ app.get('/devices/:enterpriseId', async (req, res) => {
 
 app.post('/policy', async (req, res) => {
   try {
-    const { enterpriseId, allowedApps } = req.body;
+    const { enterpriseId } = req.body;
+    const policy = {
+      name: 'Policy101',
+      cameraDisabled: true,
+      applications: [
+        // ...allowedApps.map(app => ({
+        //   packageName: app,
+        //   installType: 'FORCE_INSTALLED',
+        // })),
+        { installType: "PREINSTALLED", packageName: "com.google.android.apps.maps" },
+        { installType: "PREINSTALLED", packageName: "com.adpmobile.android" },
+        { installType: "PREINSTALLED", packageName: "com.waze" },
+        { installType: "PREINSTALLED", packageName: "com.edriving.mentor.amazon" },
+        { installType: "PREINSTALLED", packageName: "com.amazon.flex.rabbit" },
+        { installType: "BLOCKED", packageName: "com.verizon.messaging.vzmsgs" },
+        { installType: "BLOCKED", packageName: "com.vzw.hss.myverizon" },
+        { installType: "BLOCKED", packageName: "com.motorola.visualvoicemail" },
+        { installType: "BLOCKED", packageName: "com.google.android.googlequicksearchbox" },
+        { installType: "BLOCKED", packageName: "com.vzw.ecid" }
+      ],
+      playStoreMode: 'WHITELIST',
+      advancedSecurityOverrides: {
+        developerSettings: "DEVELOPER_SETTINGS_DISABLED"
+      },
+      maximumTimeToLock: "600",
+      displaySettings: {
+        screenTimeoutSettings: {
+          screenTimeoutMode: "SCREEN_TIMEOUT_ENFORCED",
+          screenTimeout: "120s"
+        }
+      },
+      defaultPermissionPolicy: "GRANT",
+      addUserDisabled: true,
+      removeUserDisabled: true,
+      modifyAccountsDisabled: true,
+      passwordRequirements: {
+        passwordMinimumLength: 4,
+        passwordHistoryLength: 0,
+        maximumFailedPasswordsForWipe: 0
+      },
+      funDisabled: true,
+      deviceOwnerLockScreenInfo: {
+        defaultMessage: "This device belongs to "
+      },
+      autoDateAndTimeZone: "AUTO_DATE_AND_TIME_ZONE_ENFORCED",
+      statusReportingSettings: {
+        applicationReportsEnabled: true,
+        deviceSettingsEnabled: true,
+        softwareInfoEnabled: true,
+        memoryInfoEnabled: true,
+        networkInfoEnabled: true,
+        displayInfoEnabled: true,
+        powerManagementEventsEnabled: true,
+        hardwareStatusEnabled: true,
+        systemPropertiesEnabled: true,
+        applicationReportingSettings: {
+          includeRemovedApps: false
+        }
+      },
+      skipFirstUseHintsEnabled: true,
+      kioskCustomLauncherEnabled: false
+    };
     const fullEnterpriseName = `enterprises/${enterpriseId}`;
-    const updatedPolicy = await createOrUpdateAppPolicy(fullEnterpriseName, allowedApps);
+    const updatedPolicy = await createOrUpdateAppPolicy(fullEnterpriseName, policy);
     res.json({ message: 'Policy created or updated successfully', policy: updatedPolicy });
   } catch (error) {
     console.error('Error creating/updating policy:', error);
@@ -318,23 +379,12 @@ async function deleteDevice(fullDeviceName) {
 
 
 
-async function createOrUpdateAppPolicy(fullEnterpriseName, allowedApps) {
+async function createOrUpdateAppPolicy(fullEnterpriseName, policy) {
   const androidmanagement = await getAndroidManagementClient();
-
-  const policy = {
-    name : 'Policy101',
-    cameraDisabled : "true",
-    applications: allowedApps.map(app => ({
-      packageName: app,
-      installType: 'FORCE_INSTALLED',
-    })),
-    playStoreMode: 'WHITELIST',
-  };
-
   try {
     const res = await androidmanagement.enterprises.policies.patch({
       name: `${fullEnterpriseName}/policies/masterPolicy`,
-      updateMask: 'applications,playStoreMode',
+      updateMask: 'applications,playStoreMode,cameraDisabled,advancedSecurityOverrides,maximumTimeToLock,displaySettings,defaultPermissionPolicy,addUserDisabled,removeUserDisabled,modifyAccountsDisabled,passwordRequirements,funDisabled,deviceOwnerLockScreenInfo,autoDateAndTimeZone,statusReportingSettings,skipFirstUseHintsEnabled,kioskCustomLauncherEnabled',
       requestBody: policy,
     });
     console.log('Policy created or updated:', res.data);

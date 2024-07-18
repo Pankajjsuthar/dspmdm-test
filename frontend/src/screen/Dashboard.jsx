@@ -5,7 +5,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import QRCode from "qrcode"; // Import the qrcode library
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = import.meta.env.VITE_BASE_URL
 
 function formatDate(dateString) {
   const options = {
