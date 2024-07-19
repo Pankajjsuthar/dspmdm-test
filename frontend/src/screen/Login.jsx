@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
 import { auth, db } from "../firebaseConfig";
 import { useNavigate, Link } from "react-router-dom";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
