@@ -113,7 +113,7 @@ function Dashboard() {
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <header className="bg-white shadow-md">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-blue-600">DSP - EMM Dashboard</h1>
+          <h1 className="text-xl lg:text-2xl font-bold text-blue-600">DSP - EMM Dashboard</h1>
           <button
             onClick={handleLogout}
             className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition duration-300"
@@ -165,18 +165,18 @@ function Dashboard() {
         </div>
 
         <div className="bg-white rounded-xl shadow-lg p-6 mt-10">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+          <h2 className="text-xl lg:text-2xl font-semibold text-gray-800 mb-4">
             Managed Devices
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="bg-gray-100">
-                  <th className="px-4 py-2 text-left">Device Id</th>
-                  <th className="px-4 py-2 text-left">Brand</th>
-                  <th className="px-4 py-2 text-left">Policy Version</th>
-                  <th className="px-4 py-2 text-left">Enrolled at</th>
-                  <th className="px-4 py-2 text-left">Action</th>
+                  <th className="text-sm lg:xl px-4 py-2 text-left">Device Id</th>
+                  <th className="text-sm lg:xl px-4 py-2 text-left">Brand</th>
+                  <th className="text-sm lg:xl px-4 py-2 text-left">Policy Version</th>
+                  <th className="text-sm lg:xl px-4 py-2 text-left">Enrolled at</th>
+                  <th className="text-sm lg:xl px-4 py-2 text-left">Action</th>
                 </tr>
               </thead>
               <tbody>

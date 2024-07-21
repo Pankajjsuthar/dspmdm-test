@@ -6,14 +6,14 @@ const BASE_URL = import.meta.env.VITE_BASE_URL
 function Landing() {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white ">
       {/* Header */}
-      <header className="bg-white shadow-md">
-        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="text-2xl font-bold text-blue-600">DSP - EMM Solutions</div>
+      <header className="bg-white shadow-md ">
+        <div className="container mx-auto px-6 py-4 flex justify-between items-center ">
+          <div className="text-xl lg:text-2xl font-bold text-blue-600">DSP - EMM Solutions</div>
           <nav>
             <ul className="flex space-x-6">
-              <li>
+              <li className="hidden lg:block">
                 <button
                   href="#features"
                   className="text-gray-600 hover:text-blue-600 transition duration-300 py-2"
@@ -21,7 +21,7 @@ function Landing() {
                   Features
                 </button>
               </li>
-              <li>
+              <li className="hidden lg:block">
                 <button
                   href="#how-it-works"
                   className="text-gray-600 hover:text-blue-600 transition duration-300 py-2"
